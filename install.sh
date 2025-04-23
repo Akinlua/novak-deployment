@@ -114,6 +114,9 @@ fi
 # Start the containers
 echo "====================================================="
 echo "Starting Novak Trading Engine..."
+# Stop any existing containers to prevent conflicts
+docker-compose down || true
+
 docker-compose pull
 docker-compose up -d
 
