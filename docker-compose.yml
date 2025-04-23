@@ -1,0 +1,60 @@
+version: '3.8'
+
+# This is a sample configuration for running the Novak Trading Engine.
+# Users need to create a .env file with their own configuration values.
+# Required variables in the .env file:
+# - LICENSE_KEY: Your personal license key
+# - MT5_SERVER: Your MT5 broker server
+# - MT5_LOGIN: Your MT5 account login
+# - MT5_PASSWORD: Your MT5 account password
+# - CENTRAL_SERVER_URL: URL of the central server (default: https://api.novaktrading.com)
+# - MONGODB_URI: MongoDB connection string (optional - can use Docker MongoDB)
+
+services:
+  trading-engine:
+    image: ${DOCKER_HUB_USERNAME:-novaktrading}/novak-trading-engine:latest
+    ports:
+      - "5001:5001"  # Flask API
+    environment:
+      - FLASK_APP=src/app.py
+      - FLASK_DEBUG=false
+      - CENTRAL_SERVER_URL=${CENTRAL_SERVER_URL:-https://api.novaktrading.com}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/novak_trading}
+      - SECRET_KEY=${SECRET_KEY:-default_dev_secret_key}
+      - LICENSE_KEY=${LICENSE_KEY}
+      - MT5_SERVER=${MT5_SERVER}
+      - MT5_LOGIN=${MT5_LOGIN}
+      - MT5_PASSWORD=${MT5_PASSWORD}
+      - MT5_HOST=${MT5_HOST:-localhost}
+      - MT5_PORT=${MT5_PORT:-8001}
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - mt5
+
+  mt5:
+    image: gmag11/metatrader5_vnc
+    ports:
+      - "3001:3000"  # VNC web access (different port than central-server MT5)
+      - "8002:8001"  # RPyC server port (different port than central-server MT5)
+    environment:
+      - CUSTOM_USER=admin
+      - PASSWORD=${MT5_VNC_PASSWORD:-admin}
+    volumes:
+      - mt5_data:/config
+    restart: unless-stopped
+
+  # Optional local MongoDB - comment out this service if you're using MongoDB Atlas
+  mongodb:
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  mt5_data:  # Persist MT5 terminal data 
