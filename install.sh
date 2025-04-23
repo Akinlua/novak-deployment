@@ -9,6 +9,13 @@ echo "====================================================="
 echo "   Novak Trading Engine - Easy Installation Script   "
 echo "====================================================="
 
+# Check if script is running in interactive mode
+INTERACTIVE=true
+if [ ! -t 0 ]; then
+    INTERACTIVE=false
+    echo "Running in non-interactive mode"
+fi
+
 # Create installation directory
 INSTALL_DIR="$HOME/novak-trading-engine"
 mkdir -p "$INSTALL_DIR"
@@ -84,18 +91,24 @@ EOL
     echo "The file is located at: $INSTALL_DIR/.env"
 fi
 
-# Ask user if they want to edit the .env file now
-echo "====================================================="
-echo "Would you like to edit the .env file now? (y/n)"
-read -r answer
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    if command -v nano &> /dev/null; then
-        nano .env
-    elif command -v vim &> /dev/null; then
-        vim .env
-    else
-        echo "No editor found. Please edit the .env file manually at: $INSTALL_DIR/.env"
+# Ask user if they want to edit the .env file now (only in interactive mode)
+if [ "$INTERACTIVE" = true ]; then
+    echo "====================================================="
+    echo "Would you like to edit the .env file now? (y/n)"
+    read -r answer
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        if command -v nano &> /dev/null; then
+            nano .env
+        elif command -v vim &> /dev/null; then
+            vim .env
+        else
+            echo "No editor found. Please edit the .env file manually at: $INSTALL_DIR/.env"
+        fi
     fi
+else
+    echo "====================================================="
+    echo "Running in non-interactive mode - skipping .env editing"
+    echo "Please edit the .env file manually at: $INSTALL_DIR/.env before starting services"
 fi
 
 # Start the containers
