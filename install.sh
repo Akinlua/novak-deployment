@@ -66,8 +66,8 @@ SECRET_KEY=SYRYUR
 MONGO_USERNAME=admin
 MONGO_PASSWORD=secretpassword
 
-# MongoDB connection
-MONGODB_URI=mongodb://\${MONGO_USERNAME}:\${MONGO_PASSWORD}@mongodb:27017/novak_trading?authSource=admin
+# # MongoDB connection
+# MONGODB_URI=mongodb://\${MONGO_USERNAME}:\${MONGO_PASSWORD}@mongodb:27017/novak_trading?authSource=admin
 
 # MT5 default settings (can be overridden at runtime)
 MT5_SERVER=Exness-MT5Trial
