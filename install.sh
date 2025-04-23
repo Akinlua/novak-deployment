@@ -17,18 +17,23 @@ cd "$INSTALL_DIR"
 echo "Installing to: $INSTALL_DIR"
 echo "====================================================="
 
-# Check if Docker is installed
+# Check if Docker is installed, if not install it
 if ! command -v docker &> /dev/null; then
-    echo "Docker is not installed. Please install Docker before continuing."
-    echo "Visit https://docs.docker.com/get-docker/ for installation instructions."
-    exit 1
+    echo "Docker is not installed. Installing Docker..."
+    sudo apt update
+    sudo apt install -y docker.io
+    sudo systemctl enable --now docker
+    
+    # Add current user to docker group to avoid using sudo with docker
+    sudo usermod -aG docker $USER
+    echo "Docker has been installed. You might need to log out and log back in for group changes to take effect."
 fi
 
-# Check if Docker Compose is installed
+# Check if Docker Compose is installed, if not install it
 if ! command -v docker-compose &> /dev/null; then
-    echo "Docker Compose is not installed. Please install Docker Compose before continuing."
-    echo "Visit https://docs.docker.com/compose/install/ for installation instructions."
-    exit 1
+    echo "Docker Compose is not installed. Installing Docker Compose..."
+    sudo apt install -y docker-compose
+    echo "Docker Compose has been installed."
 fi
 
 # Create directories
@@ -38,7 +43,7 @@ mkdir -p "$INSTALL_DIR/data"
 
 # Download the latest docker-compose.yml
 echo "Downloading latest docker-compose.yml..."
-curl -s https://raw.githubusercontent.com/Akinlua/Novak/backend/trading-engine/docker-compose.yml > docker-compose.yml
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/docker-compose.yml > docker-compose.yml
 
 # Create .env file with default values if it doesn't exist
 if [ ! -f ".env" ]; then
@@ -47,21 +52,33 @@ if [ ! -f ".env" ]; then
 # Novak Trading Engine Environment Variables
 # Please edit these values with your own configuration
 
-# Required Settings
-LICENSE_KEY=your_license_key_here
-MT5_SERVER=your_mt5_server
+# Server settings
+FLASK_DEBUG=True
+SECRET_KEY=SYRYUR
+
+MONGO_USERNAME=admin
+MONGO_PASSWORD=secretpassword
+
+# MongoDB connection
+MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/novak_trading?authSource=admin
+
+# MT5 default settings (can be overridden at runtime)
+MT5_SERVER=Exness-MT5Trial
 MT5_LOGIN=your_mt5_login
 MT5_PASSWORD=your_mt5_password
+MT5_HOST=147.93.112.143
 
-# Optional Settings (with defaults)
-DOCKER_HUB_USERNAME=novaktrading
-SECRET_KEY=change_this_to_a_secure_random_string
-CENTRAL_SERVER_URL=https://api.novaktrading.com
-MONGODB_URI=mongodb://mongodb:27017/novak_trading
+MT5_VNC_USER=admin
 MT5_VNC_PASSWORD=admin
 
-# Advanced Settings (only change if you know what you're doing)
-MT5_PORT=8001
+# Logging
+LOG_LEVEL=INFO
+
+# Central Server Configuration
+CENTRAL_SERVER_URL=http://147.93.112.143:5002
+
+# License
+LICENSE_KEY=your_license_key_here 
 EOL
     echo "Please edit the .env file with your MT5 credentials and license key."
     echo "The file is located at: $INSTALL_DIR/.env"
