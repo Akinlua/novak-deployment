@@ -5,7 +5,7 @@
 You can install and run the Novak Trading Engine with a single command:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Akinlua/Novak/backend/trading-engine/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/install.sh | bash
 ```
 
 This command will:
@@ -20,7 +20,7 @@ If you prefer to review the installation script before running it, you can:
 
 1. Download the installation script:
 ```bash
-curl -O https://raw.githubusercontent.com/Akinlua/Novak/backend/trading-engine/install.sh
+curl -O https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/install.sh
 ```
 
 2. Review the script:
