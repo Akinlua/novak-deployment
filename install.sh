@@ -79,7 +79,7 @@ MT5_SERVER=Exness-MT5Trial
 MT5_LOGIN=your_mt5_login
 MT5_PASSWORD=your_mt5_password
 MT5_HOST=147.93.112.143
-MT5_PORT=8001
+MT5_PORT=3000
 
 MT5_VNC_USER=admin
 MT5_VNC_PASSWORD=admin
@@ -121,6 +121,20 @@ echo "====================================================="
 echo "Starting Novak Trading Engine..."
 # Stop any existing containers to prevent conflicts
 docker-compose down || true
+
+# Configure firewall to allow access to the application
+echo "Configuring firewall rules..."
+if command -v ufw &> /dev/null; then
+    sudo ufw status | grep -q "Status: active" && {
+        echo "Opening port 5001 for Trading Engine API..."
+        sudo ufw allow 5001/tcp
+        echo "Firewall configured successfully."
+    } || {
+        echo "UFW is installed but not active. No firewall changes made."
+    }
+else
+    echo "UFW not found. Skipping firewall configuration."
+fi
 
 docker-compose pull
 docker-compose up -d
