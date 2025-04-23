@@ -52,10 +52,15 @@ mkdir -p "$INSTALL_DIR/data"
 echo "Downloading latest docker-compose.yml..."
 curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/docker-compose.yml > docker-compose.yml
 
-# Create .env file with default values if it doesn't exist
-if [ ! -f ".env" ]; then
-    echo "Creating default .env file..."
-    cat > .env << EOL
+# Remove existing .env file if it exists
+if [ -f ".env" ]; then
+    echo "Removing existing .env file..."
+    rm -f .env
+fi
+
+# Create .env file with default values
+echo "Creating .env file..."
+cat > .env << EOL
 # Novak Trading Engine Environment Variables
 # Please edit these values with your own configuration
 
