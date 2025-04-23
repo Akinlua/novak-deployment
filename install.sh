@@ -67,13 +67,14 @@ MONGO_USERNAME=admin
 MONGO_PASSWORD=secretpassword
 
 # MongoDB connection
-MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/novak_trading?authSource=admin
+MONGODB_URI=mongodb://\${MONGO_USERNAME}:\${MONGO_PASSWORD}@mongodb:27017/novak_trading?authSource=admin
 
 # MT5 default settings (can be overridden at runtime)
 MT5_SERVER=Exness-MT5Trial
 MT5_LOGIN=your_mt5_login
 MT5_PASSWORD=your_mt5_password
 MT5_HOST=147.93.112.143
+MT5_PORT=8001
 
 MT5_VNC_USER=admin
 MT5_VNC_PASSWORD=admin
