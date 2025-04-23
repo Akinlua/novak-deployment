@@ -93,9 +93,8 @@ CENTRAL_SERVER_URL=http://147.93.112.143:5002
 # License
 LICENSE_KEY=your_license_key_here 
 EOL
-    echo "Please edit the .env file with your MT5 credentials and license key."
-    echo "The file is located at: $INSTALL_DIR/.env"
-fi
+echo "Please edit the .env file with your MT5 credentials and license key."
+echo "The file is located at: $INSTALL_DIR/.env"
 
 # Ask user if they want to edit the .env file now (only in interactive mode)
 if [ "$INTERACTIVE" = true ]; then
