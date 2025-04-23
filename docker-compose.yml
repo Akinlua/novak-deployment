@@ -21,7 +21,9 @@ services:
       - FLASK_APP=src/app.py
       - FLASK_DEBUG=false
       - CENTRAL_SERVER_URL=${CENTRAL_SERVER_URL:-http://147.93.112.143:5002}
-      - MONGODB_URI=${MONGODB_URI:-mongodb://admin:secretpassword@mongodb:27017/novak_trading?authSource=admin}
+      - MONGO_USERNAME=${MONGO_USERNAME:-admin}
+      - MONGO_PASSWORD=${MONGO_PASSWORD:-secretpassword}
+      - MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/novak_trading?authSource=admin
       - SECRET_KEY=${SECRET_KEY:-default_dev_secret_key}
       - LICENSE_KEY=${LICENSE_KEY}
       - MT5_SERVER=${MT5_SERVER}
