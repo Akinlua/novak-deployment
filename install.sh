@@ -126,8 +126,12 @@ docker-compose down || true
 echo "Configuring firewall rules..."
 if command -v ufw &> /dev/null; then
     sudo ufw status | grep -q "Status: active" && {
-        echo "Opening port 5001 for Trading Engine API..."
+        echo "Opening ports 5001, 8001, 8002 for Trading Engine API..."
         sudo ufw allow 5001/tcp
+        sudo ufw allow 5002/tcp
+        sudo ufw allow 8001/tcp
+        sudo ufw allow 8002/tcp
+        
         echo "Firewall configured successfully."
     } || {
         echo "UFW is installed but not active. No firewall changes made."
