@@ -50,7 +50,7 @@ services:
       - CUSTOM_USER=${MT5_VNC_USER:-admin}
       - PASSWORD=${MT5_VNC_PASSWORD:-admin}
     volumes:
-      - mt5_data:/config
+      - ./mt5_data:/config
     restart: unless-stopped
 
   # Optional local MongoDB - comment out this service if you're using MongoDB Atlas
@@ -82,4 +82,3 @@ services:
 
 volumes:
   mongodb_data:
-  mt5_data:  # Persist MT5 terminal data 

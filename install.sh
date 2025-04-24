@@ -47,6 +47,7 @@ fi
 echo "Creating directories..."
 mkdir -p "$INSTALL_DIR/logs"
 mkdir -p "$INSTALL_DIR/data"
+mkdir -p "$INSTALL_DIR/mt5_data"
 mkdir -p "$INSTALL_DIR/mt5-custom"
 
 # Download the latest docker-compose.yml and MT5 custom files
