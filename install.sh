@@ -47,10 +47,14 @@ fi
 echo "Creating directories..."
 mkdir -p "$INSTALL_DIR/logs"
 mkdir -p "$INSTALL_DIR/data"
+mkdir -p "$INSTALL_DIR/mt5-custom"
 
-# Download the latest docker-compose.yml
-echo "Downloading latest docker-compose.yml..."
+# Download the latest docker-compose.yml and MT5 custom files
+echo "Downloading latest configuration files..."
 curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/docker-compose.yml > docker-compose.yml
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/mt5-custom/Dockerfile > mt5-custom/Dockerfile
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/mt5-custom/README.md > mt5-custom/README.md
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/mt5-custom/mt5-exness-setup.exe > mt5-custom/mt5-exness-setup.exe
 
 # Remove existing .env file if it exists
 if [ -f ".env" ]; then
@@ -140,7 +144,11 @@ else
     echo "UFW not found. Skipping firewall configuration."
 fi
 
+echo "Building custom MT5 container..."
+# docker-compose build mt5
 docker-compose pull
+
+echo "Starting all services..."
 docker-compose up -d
 
 # Show status and connection information
