@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
     depends_on:
       - mongodb
-      - mt5
+      - mt5_user
 
   mt5_user:
     image: gmag11/metatrader5_vnc
