@@ -42,7 +42,8 @@ services:
       - mt5
 
   mt5:
-    image: novak001/exness-mt5-vnc:latest
+    image: gmag11/metatrader5_vnc
+    container_name: mt5
     ports:
       - "3001:3000"  # VNC web access (different port than central-server MT5)
       - "8002:8001"  # RPyC server port (different port than central-server MT5)
