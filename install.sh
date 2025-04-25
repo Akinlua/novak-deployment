@@ -289,7 +289,7 @@ echo "Waiting for MT5 container to start..."
 sleep 10
 
 # Get the MT5 container ID
-MT5_CONTAINER_ID=$(docker ps | grep mt5 | awk '{print $1}')
+MT5_CONTAINER_ID=$(docker ps | grep mt5_user | awk '{print $1}')
 
 if [ -z "$MT5_CONTAINER_ID" ]; then
     echo "Error: MT5 container not found!"

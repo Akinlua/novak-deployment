@@ -41,9 +41,9 @@ services:
       - mongodb
       - mt5
 
-  mt5:
+  mt5_user:
     image: gmag11/metatrader5_vnc
-    container_name: mt5
+    container_name: mt5_user
     ports:
       - "3001:3000"  # VNC web access (different port than central-server MT5)
       - "8002:8001"  # RPyC server port (different port than central-server MT5)
