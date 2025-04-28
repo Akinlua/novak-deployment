@@ -264,6 +264,7 @@ echo "Configuring firewall rules..."
 if command -v ufw &> /dev/null; then
     sudo ufw status | grep -q "Status: active" && {
         echo "Opening ports 5001, 8001, 8002 for Trading Engine API..."
+        sudo apt install ufw
         sudo ufw allow 5001/tcp
         sudo ufw allow 5002/tcp
         sudo ufw allow 8001/tcp
