@@ -5,6 +5,74 @@
 
 set -e  # Exit on error
 
+# Parse command line arguments
+LICENSE_KEY=""
+MT5_LOGIN=""
+MT5_PASSWORD=""
+MT5_SERVER="Exness-MT5Trial9"
+SECRET_KEY="SYRYUR"
+MT5_HOST="localhost"
+MT5_PORT="8002"
+
+# Function to show usage
+show_usage() {
+    echo "Usage: $0 [OPTIONS]"
+    echo "Options:"
+    echo "  --license-key KEY       Set the license key"
+    echo "  --mt5-login LOGIN       Set MT5 login"
+    echo "  --mt5-password PASS     Set MT5 password"
+    echo "  --mt5-server SERVER     Set MT5 server (default: Exness-MT5Trial)"
+    echo "  --secret-key KEY        Set Flask secret key (default: SYRYUR)" 
+    echo "  --mt5-host HOST         Set MT5 host (default: localhost)"
+    echo "  --mt5-port PORT         Set MT5 port (default: 8002)"
+    echo "  --help                  Show this help message"
+    echo ""
+    echo "Example:"
+    echo "  curl -sSL https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/install.sh | bash -s -- --license-key YOUR_LICENSE --mt5-login 12345 --mt5-password yourpass"
+    exit 0
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --license-key)
+            LICENSE_KEY="$2"
+            shift 2
+            ;;
+        --mt5-login)
+            MT5_LOGIN="$2"
+            shift 2
+            ;;
+        --mt5-password)
+            MT5_PASSWORD="$2"
+            shift 2
+            ;;
+        --mt5-server)
+            MT5_SERVER="$2"
+            shift 2
+            ;;
+        --secret-key)
+            SECRET_KEY="$2"
+            shift 2
+            ;;
+        --mt5-host)
+            MT5_HOST="$2"
+            shift 2
+            ;;
+        --mt5-port)
+            MT5_PORT="$2"
+            shift 2
+            ;;
+        --help)
+            show_usage
+            ;;
+        *)
+            echo "Unknown option: $1"
+            show_usage
+            ;;
+    esac
+done
+
 echo "====================================================="
 echo "   Novak Trading Engine - Easy Installation Script   "
 echo "====================================================="
@@ -197,13 +265,35 @@ fi
 
 # Create .env file with default values
 echo "Creating .env file..."
+
+# Set default values if not provided via command line
+if [ -z "$LICENSE_KEY" ]; then
+    LICENSE_KEY="your_license_key_here"
+fi
+
+if [ -z "$MT5_LOGIN" ]; then
+    MT5_LOGIN="your_mt5_login"
+fi
+
+if [ -z "$MT5_PASSWORD" ]; then
+    MT5_PASSWORD="your_mt5_password"
+fi
+
+if [ -z "$MT5_HOST" ]; then
+    MT5_HOST="localhost"
+fi
+
+if [ -z "$MT5_PORT" ]; then
+    MT5_PORT="8002"
+fi
 cat > .env << EOL
 # Novak Trading Engine Environment Variables
 # Please edit these values with your own configuration
+PORT = 5001
 
 # Server settings
 FLASK_DEBUG=True
-SECRET_KEY=SYRYUR
+SECRET_KEY=$SECRET_KEY
 
 MONGO_USERNAME=admin
 MONGO_PASSWORD=secretpassword
@@ -212,11 +302,11 @@ MONGO_PASSWORD=secretpassword
 # MONGODB_URI=mongodb://\${MONGO_USERNAME}:\${MONGO_PASSWORD}@mongodb:27017/novak_trading?authSource=admin
 
 # MT5 default settings (can be overridden at runtime)
-MT5_SERVER=Exness-MT5Trial
-MT5_LOGIN=your_mt5_login
-MT5_PASSWORD=your_mt5_password
-MT5_HOST=147.93.112.143
-MT5_PORT=8002
+MT5_SERVER=$MT5_SERVER
+MT5_LOGIN=$MT5_LOGIN
+MT5_PASSWORD=$MT5_PASSWORD
+MT5_HOST=$MT5_HOST
+MT5_PORT=$MT5_PORT
 
 MT5_VNC_USER=admin
 MT5_VNC_PASSWORD=admin
@@ -228,9 +318,31 @@ LOG_LEVEL=INFO
 CENTRAL_SERVER_URL=http://147.93.112.143:5002
 
 # License
-LICENSE_KEY=your_license_key_here 
+LICENSE_KEY=$LICENSE_KEY 
 EOL
-echo "Please edit the .env file with your MT5 credentials and license key."
+
+# Show what was configured
+echo "Configuration applied:"
+if [ "$LICENSE_KEY" != "your_license_key_here" ]; then
+    echo "  ✓ License key: Set"
+else
+    echo "  ⚠ License key: Using default (please update manually)"
+fi
+
+if [ "$MT5_LOGIN" != "your_mt5_login" ]; then
+    echo "  ✓ MT5 Login: $MT5_LOGIN"
+else
+    echo "  ⚠ MT5 Login: Using default (please update manually)"
+fi
+
+if [ "$MT5_PASSWORD" != "your_mt5_password" ]; then
+    echo "  ✓ MT5 Password: Set"
+else
+    echo "  ⚠ MT5 Password: Using default (please update manually)"
+fi
+
+echo "  ✓ MT5 Server: $MT5_SERVER"
+echo "Please edit the .env file with your MT5 credentials and license key if not provided via command line."
 echo "The file is located at: $INSTALL_DIR/.env"
 
 # Ask user if they want to edit the .env file now (only in interactive mode)
