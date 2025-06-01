@@ -125,6 +125,19 @@ curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/ma
 curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/mt5-custom/README.md > mt5-custom/README.md
 curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/mt5-custom/mt5-exness-setup.exe > mt5-custom/mt5-exness-setup.exe
 
+# Create defaults directory and menu.xml
+echo "Creating defaults directory and menu.xml..."
+mkdir -p "$INSTALL_DIR/defaults"
+cat > "$INSTALL_DIR/defaults/menu.xml" << 'EOL'
+<?xml version="1.0" encoding="utf-8"?>
+<openbox_menu xmlns="http://openbox.org/3.4/menu">
+<menu id="root-menu" label="MENU">
+<item label="xterm" icon="/usr/share/pixmaps/xterm-color_48x48.xpm"><action name="Execute"><command>/usr/bin/xterm</command></action></item>
+<item label="Metatrader 5 Exness" icon="/config/.wine/drive_c/Program Files/MetaTrader 5 EXNESS/Terminal.ico"><action name="Execute"><command>/usr/bin/wine "/config/.wine/drive_c/Program Files/MetaTrader 5 Exness/terminal64.exe"</command></action></item>
+</menu>
+</openbox_menu>
+EOL
+
 # Save the custom start.sh for MT5
 echo "Creating custom start.sh for MT5..."
 cat > "$INSTALL_DIR/custom_start.sh" << 'EOL'
@@ -421,6 +434,12 @@ docker exec $MT5_CONTAINER_ID apt-get install -y nano
 echo "Replacing start.sh in the MT5 container..."
 docker cp "$INSTALL_DIR/custom_start.sh" $MT5_CONTAINER_ID:/Metatrader/start.sh
 docker exec $MT5_CONTAINER_ID chmod +x /Metatrader/start.sh
+
+# Replace the menu.xml in the MT5 container
+echo "Replacing menu.xml in the MT5 container..."
+docker cp "$INSTALL_DIR/defaults/menu.xml" $MT5_CONTAINER_ID:/defaults/menu.xml
+
+docker exec $MT5_CONTAINER_ID chmod +x /defaults/menu.xml
 
 # Restart the MT5 container
 echo "Restarting MT5 container to apply changes..."
