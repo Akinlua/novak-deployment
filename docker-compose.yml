@@ -13,8 +13,7 @@ version: '3.8'
 services:
   trading-engine:
     image: novak001/novak-trading-engine:latest
-    ports:
-      - "5001:5001"  # Flask API
+    network_mode: host  # Use host network to get real host IP when making requests
     env_file:
       - .env  
     environment:
@@ -30,7 +29,7 @@ services:
       - MT5_LOGIN=${MT5_LOGIN}
       - MT5_PASSWORD=${MT5_PASSWORD}
       - MT5_HOST=${MT5_HOST:-localhost}
-      - MT5_PORT=${MT5_PORT:-8001}
+      - MT5_PORT=${MT5_PORT:-8002}  # Updated to match mt5_user port mapping
       - MT5_VNC_USER=${MT5_VNC_USER:-admin}
       - MT5_VNC_PASSWORD=${MT5_VNC_PASSWORD:-admin}
     volumes:
