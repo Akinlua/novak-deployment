@@ -1,0 +1,28 @@
+[Unit]
+Description=MT5 Container Manager Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/trading-engine
+ExecStart=/usr/bin/python3 /opt/trading-engine/scripts/mt5_container_manager.py --daemon
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Environment variables
+Environment="MT5_CONTAINER_NAME=mt5_user"
+Environment="MT5_IMAGE=gmag11/metatrader5_vnc"
+Environment="MT5_PORT=8002"
+Environment="MT5_HOST=localhost"
+Environment="TRADING_ENGINE_URL=http://localhost:5001"
+Environment="DOCKER_HOST=unix:///var/run/docker.sock"
+
+# Ensure Docker socket access
+SupplementaryGroups=docker
+
+[Install]
+WantedBy=multi-user.target 

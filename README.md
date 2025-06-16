@@ -90,7 +90,7 @@ After installation, you'll need to edit the `.env` file in the installation dire
 You can access the MetaTrader 5 interface through your web browser at:
 - URL: http://localhost:3001
 - Username: admin
-- Password: (defined in your .env file)
+- Password: default (admin)
 
 ## API Access
 
