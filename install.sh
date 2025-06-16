@@ -447,7 +447,62 @@ docker restart $MT5_CONTAINER_ID
 
 # Wait for the MT5 container to restart
 echo "Waiting for MT5 container to restart..."
+
+# Setup MT5 Container Manager
+echo "====================================================="
+echo "Setting up MT5 Container Manager..."
+
+# Download MT5 container manager files
+echo "Downloading MT5 container manager files..."
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/scripts/mt5_container_manager.py > "$INSTALL_DIR/mt5_container_manager.py"
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/scripts/mt5-container-manager.service > "$INSTALL_DIR/mt5-container-manager.service"
+
+# Check if we can install systemd service (requires sudo)
+if command -v systemctl &> /dev/null && [ "$EUID" -eq 0 ]; then
+    echo "Installing MT5 Container Manager as system service..."
+    
+    # Create log directory
+    mkdir -p /var/log
+    touch /var/log/mt5_container_manager.log
+    chmod 644 /var/log/mt5_container_manager.log
+    
+    # Copy files to system location
+    mkdir -p /opt/trading-engine/scripts
+    cp "$INSTALL_DIR/mt5_container_manager.py" /opt/trading-engine/scripts/
+    chmod +x /opt/trading-engine/scripts/mt5_container_manager.py
+    
+    # Install systemd service
+    cp "$INSTALL_DIR/mt5-container-manager.service" /etc/systemd/system/
+    systemctl daemon-reload
+    systemctl enable mt5-container-manager.service
+    systemctl start mt5-container-manager.service
+    
+    echo "✓ MT5 Container Manager installed and started as system service"
+    echo "  Service status: systemctl status mt5-container-manager"
+    echo "  View logs: journalctl -u mt5-container-manager -f"
+    
+elif command -v systemctl &> /dev/null; then
+    echo "Installing MT5 Container Manager (requires sudo)..."
+    echo "Please run the following commands as root:"
+    echo ""
+    echo "sudo mkdir -p /var/log /opt/trading-engine/scripts"
+    echo "sudo cp $INSTALL_DIR/mt5_container_manager.py /opt/trading-engine/scripts/"
+    echo "sudo chmod +x /opt/trading-engine/scripts/mt5_container_manager.py"
+    echo "sudo cp $INSTALL_DIR/mt5-container-manager.service /etc/systemd/system/"
+    echo "sudo systemctl daemon-reload"
+    echo "sudo systemctl enable mt5-container-manager.service"
+    echo "sudo systemctl start mt5-container-manager.service"
+    echo ""
+    echo "Or install manually:"
+    echo "  cd $INSTALL_DIR && sudo ./install_mt5_manager.sh"
+    
+else
+    echo "Systemd not available. MT5 Container Manager can be run manually:"
+    echo "  python3 $INSTALL_DIR/mt5_container_manager.py --daemon"
+fi
+
 sleep 15
+
 
 # Show status and connection information
 echo "====================================================="
