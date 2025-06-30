@@ -328,7 +328,7 @@ MT5_VNC_PASSWORD=admin
 LOG_LEVEL=INFO
 
 # Central Server Configuration
-CENTRAL_SERVER_URL=http://147.93.112.143:5002
+CENTRAL_SERVER_URL=https://backend-xau.novaktrading.com
 
 # License
 LICENSE_KEY=$LICENSE_KEY 
