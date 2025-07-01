@@ -302,7 +302,7 @@ fi
 cat > .env << EOL
 # Novak Trading Engine Environment Variables
 # Please edit these values with your own configuration
-PORT = 5001
+PORT = 8000
 
 # Server settings
 FLASK_DEBUG=True
@@ -388,9 +388,10 @@ docker-compose down || true
 echo "Configuring firewall rules..."
 if command -v ufw &> /dev/null; then
     sudo ufw status | grep -q "Status: active" && {
-        echo "Opening ports 5001, 8001, 8002 for Trading Engine API..."
+        echo "Opening ports 5001, 8000, 8001, 8002 for Trading Engine API..."
         sudo apt install ufw
         sudo ufw allow 5001/tcp
+        sudo ufw allow 8000/tcp
         sudo ufw allow 5002/tcp
         sudo ufw allow 8001/tcp
         sudo ufw allow 8002/tcp
@@ -507,7 +508,7 @@ sleep 15
 # Show status and connection information
 echo "====================================================="
 echo "Novak Trading Engine has been started!"
-echo "Trading Engine API: http://localhost:5001"
+echo "Trading Engine API: http://localhost:8000"
 echo "MT5 VNC Access: http://localhost:3001 (user: admin, password: from .env)"
 echo "MongoDB Admin Interface: http://localhost:8081 (login with MongoDB credentials)"
 echo "====================================================="
