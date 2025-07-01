@@ -287,7 +287,7 @@ class MT5ContainerManager:
         """Notify the trading engine about MT5 restart"""
         try:
             # Get trading engine URL from environment or default to localhost
-            trading_engine_url = os.environ.get('TRADING_ENGINE_URL', 'http://localhost:5001')
+            trading_engine_url = os.environ.get('TRADING_ENGINE_URL', 'http://localhost:8000')
             
             notification_data = {
                 'timestamp': datetime.now().isoformat(),
@@ -327,7 +327,7 @@ class MT5ContainerManager:
         """Notify trading engine about MT5 restart"""
         try:
             # Call trading engine endpoint to reinitialize connections
-            trading_engine_url = os.environ.get('TRADING_ENGINE_URL', 'http://localhost:5001')
+            trading_engine_url = os.environ.get('TRADING_ENGINE_URL', 'http://localhost:8000')
             response = requests.post(
                 f"{trading_engine_url}/api/mt5-restart-notification",
                 json={'timestamp': datetime.now().isoformat()},

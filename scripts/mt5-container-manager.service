@@ -18,7 +18,7 @@ Environment="MT5_CONTAINER_NAME=mt5_user"
 Environment="MT5_IMAGE=gmag11/metatrader5_vnc"
 Environment="MT5_PORT=8002"
 Environment="MT5_HOST=localhost"
-Environment="TRADING_ENGINE_URL=http://localhost:5001"
+Environment="TRADING_ENGINE_URL=http://localhost:8000"
 Environment="DOCKER_HOST=unix:///var/run/docker.sock"
 
 # Ensure Docker socket access
