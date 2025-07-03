@@ -19,7 +19,7 @@ services:
     environment:
       - FLASK_APP=src/app.py
       - FLASK_DEBUG=false
-      - CENTRAL_SERVER_URL=${CENTRAL_SERVER_URL:-https://backend-xau.novaktrading.com}
+      - CENTRAL_SERVER_URL=${CENTRAL_SERVER_URL:-http://93.127.186.23:5002}
       - MONGO_USERNAME=${MONGO_USERNAME:-admin}
       - MONGO_PASSWORD=${MONGO_PASSWORD:-secretpassword}
       - MONGODB_URI=mongodb://${MONGO_USERNAME:-admin}:${MONGO_PASSWORD:-secretpassword}@localhost:27017/novak_trading?authSource=admin
