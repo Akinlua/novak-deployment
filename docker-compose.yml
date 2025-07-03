@@ -18,7 +18,11 @@ services:
       - .env  
     environment:
       - FLASK_APP=src/app.py
+      - FLASK_ENV=production
       - FLASK_DEBUG=false
+      - GUNICORN_WORKERS=${GUNICORN_WORKERS:-4}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - PORT=${PORT:-8000}
       - CENTRAL_SERVER_URL=${CENTRAL_SERVER_URL:-http://93.127.186.23:5002}
       - MONGO_USERNAME=${MONGO_USERNAME:-admin}
       - MONGO_PASSWORD=${MONGO_PASSWORD:-secretpassword}

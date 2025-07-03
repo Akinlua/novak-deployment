@@ -121,6 +121,15 @@ mkdir -p "$INSTALL_DIR/mt5-custom"
 # Download the latest docker-compose.yml and MT5 custom files
 echo "Downloading latest configuration files..."
 curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/docker-compose.yml > docker-compose.yml
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/gunicorn.conf.py > gunicorn.conf.py
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/wsgi.py > wsgi.py
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/start-production.sh > start-production.sh
+curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/start-dev.sh > start-dev.sh
+
+# Make startup scripts executable
+chmod +x start-production.sh start-dev.sh
+
+# Download MT5 custom files
 curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/mt5-custom/Dockerfile > mt5-custom/Dockerfile
 curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/mt5-custom/README.md > mt5-custom/README.md
 curl -s https://raw.githubusercontent.com/Akinlua/novak-deployment/refs/heads/main/mt5-custom/mt5-exness-setup.exe > mt5-custom/mt5-exness-setup.exe
@@ -302,12 +311,18 @@ fi
 cat > .env << EOL
 # Novak Trading Engine Environment Variables
 # Please edit these values with your own configuration
-PORT = 8000
 
-# Server settings
-FLASK_DEBUG=True
+# Flask settings
+FLASK_ENV=production
+FLASK_DEBUG=False
 SECRET_KEY=$SECRET_KEY
+PORT=8000
 
+# Gunicorn settings
+GUNICORN_WORKERS=4
+LOG_LEVEL=info
+
+# MongoDB settings
 MONGO_USERNAME=admin
 MONGO_PASSWORD=secretpassword
 
@@ -323,9 +338,6 @@ MT5_PORT=$MT5_PORT
 
 MT5_VNC_USER=admin
 MT5_VNC_PASSWORD=admin
-
-# Logging
-LOG_LEVEL=INFO
 
 # Central Server Configuration
 CENTRAL_SERVER_URL=http://93.127.186.23:5002
@@ -515,4 +527,43 @@ echo "====================================================="
 echo "To monitor the logs, run: docker-compose logs -f"
 echo "To stop the engine, run: docker-compose down"
 echo "====================================================="
-echo "Thank you for using Novak Trading Engine!" 
+echo "Thank you for using Novak Trading Engine!"
+
+echo "==================================================="
+echo "✅ Novak Trading Engine installation completed!"
+echo "==================================================="
+echo
+echo "📍 Installation directory: $INSTALL_DIR"
+echo
+echo "🔧 Configuration:"
+echo "   • Edit .env file: $INSTALL_DIR/.env"
+echo "   • Set your license key and MT5 credentials"
+echo
+echo "🚀 Starting options:"
+echo
+echo "   Production mode (with Gunicorn):"
+echo "   cd $INSTALL_DIR && ./start-production.sh"
+echo
+echo "   Development mode (Flask dev server):"
+echo "   cd $INSTALL_DIR && ./start-dev.sh"
+echo
+echo "   Docker Compose:"
+echo "   cd $INSTALL_DIR && docker-compose up -d"
+echo
+echo "🌐 Access URLs:"
+echo "   • Trading Engine API: http://localhost:8000"
+echo "   • Health Check: http://localhost:8000/healthcheck"
+echo "   • MT5 VNC Interface: http://localhost:3001"
+echo "     - Username: admin"
+echo "     - Password: (set in .env file)"
+echo
+echo "📊 Useful commands:"
+echo "   • Check status: docker-compose ps"
+echo "   • View logs: docker-compose logs -f"
+echo "   • Stop services: docker-compose down"
+echo "   • Restart: docker-compose restart"
+echo
+echo "📚 Documentation:"
+echo "   • API docs available at the /api endpoints"
+echo "   • Check README.md for more details"
+echo "==================================================" 
