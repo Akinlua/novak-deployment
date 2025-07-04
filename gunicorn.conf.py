@@ -5,12 +5,15 @@ import multiprocessing
 # Server socket
 bind = f"0.0.0.0:{os.environ.get('PORT', '8000')}"
 
-# Worker processes
-workers = int(os.environ.get('GUNICORN_WORKERS', multiprocessing.cpu_count() * 2 + 1))
+# Worker processes - Use single worker to avoid memory issues with trading bots
+# Trading bots use background threads, so we don't need multiple workers
+workers = 1  # Changed from multiprocessing.cpu_count() * 2 + 1
 worker_class = "sync"
 worker_connections = 1000
-max_requests = 1000
-max_requests_jitter = 100
+
+# Remove max_requests to prevent worker restarts that lose trading bot instances
+# max_requests = 1000
+# max_requests_jitter = 100
 
 # Timeout settings
 timeout = 120  # Increased for long-running trading operations
@@ -20,8 +23,16 @@ graceful_timeout = 30
 # Logging
 loglevel = os.environ.get('LOG_LEVEL', 'info').lower()
 access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)s'
+
+# Log to both files and stdout/stderr for docker logs compatibility
 accesslog = '/app/logs/gunicorn_access.log'
 errorlog = '/app/logs/gunicorn_error.log'
+
+# Also log to stdout/stderr for docker logs (set to '-' means stdout)
+# You can comment out the lines below if you only want file logging
+# accesslog = '-'  # This would log access to stdout
+# errorlog = '-'   # This would log errors to stderr
+
 capture_output = True
 
 # Process naming
