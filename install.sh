@@ -438,6 +438,10 @@ fi
 echo "====================================================="
 echo "Customizing MT5 container..."
 
+# Clean up sources.list to remove problematic backports entries
+echo "Cleaning up APT sources (removing bullseye-backports)..."
+docker exec $MT5_CONTAINER_ID bash -c "sed -i '/bullseye-backports/d' /etc/apt/sources.list"
+
 # Install necessary packages in the container
 echo "Installing necessary packages in the MT5 container..."
 docker exec $MT5_CONTAINER_ID apt-get update
